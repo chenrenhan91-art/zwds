@@ -1286,59 +1286,17 @@
     // --- GEMINI API CONFIG ---
     const apiKey = ""; // System provides key
 
-   // —— QWEN Worker 调用版（替换原 callGemini 函数）——
-async function callGemini(prompt, systemInstruction = "") {
-  const WORKER_URL = "https://yuzai.chenrenhan91.workers.dev"; 
-  // 如果你 Worker 有路径（比如 /chat），再改成：
-  // "https://yuzai.chenrenhan91.workers.dev/chat"
+    async function callGemini(prompt, systemInstruction = "") {
+        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
+        
+        // 构建 Payload，只在 systemInstruction 非空时添加该字段
+        const payload = {
+            contents: [{ parts: [{ text: prompt }] }]
+        };
 
-  const payload = {
-    prompt: prompt,
-    systemInstruction: systemInstruction || ""
-  };
-
-  const maxRetries = 3;
-  let delay = 1000;
-
-  for (let i = 0; i < maxRetries; i++) {
-    try {
-      const response = await fetch(WORKER_URL, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload)
-      });
-
-      if (!response.ok) {
-        const errText = await response.text().catch(() => "");
-        console.error("Worker API 错误:", response.status, errText);
-        throw new Error("HTTP错误! 状态: " + response.status);
-      }
-
-      const data = await response.json().catch(() => ({}));
-      console.log("Worker 返回:", data);
-
-      // ✅ 兼容多种返回格式：text / content / output / result / message
-      const text =
-        data.text ??
-        data.content ??
-        data.output ??
-        (data.result && (data.result.text ?? data.result.content ?? data.result.output)) ??
-        (data.message && (data.message.text ?? data.message.content)) ??
-        "";
-
-      if (!text) {
-        throw new Error("Worker返回成功但没有找到文本字段（请看 console 的 Worker 返回）");
-      }
-
-      return text;
-    } catch (err) {
-      console.warn(`请求失败，第 ${i + 1} 次重试...`, err);
-      if (i === maxRetries - 1) throw err;
-      await new Promise(r => setTimeout(r, delay));
-      delay *= 2;
-    }
-  }
-}
+        if (systemInstruction && systemInstruction.trim() !== "") {
+            payload.systemInstruction = { parts: [{ text: systemInstruction }] };
+        }
 
         const maxRetries = 3;
         let delay = 1000;
@@ -3494,4 +3452,3 @@ async function callGemini(prompt, systemInstruction = "") {
 </script>
 </body>
 </html>
-
