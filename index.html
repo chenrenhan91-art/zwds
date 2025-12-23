@@ -13,6 +13,67 @@
     <script src="https://cdn.jsdelivr.net/npm/lunar-javascript@1.6.12/lunar.min.js"></script>
     <!-- Marked for Markdown Parsing -->
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+<script>
+  // === 你的 Supabase Edge Function 地址 ===
+  const GEMINI_EDGE_URL =
+    "https://whmxepnnnjfvccellaoh.supabase.co/functions/v1/gemini";
+
+  async function askAI(prompt) {
+    const res = await fetch(GEMINI_EDGE_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ prompt }),
+    });
+
+    const data = await res.json();
+
+    // 兼容 Gemini 返回结构：提取正文
+    const text =
+      data?.candidates?.[0]?.content?.parts?.[0]?.text ||
+      data?.response?.candidates?.[0]?.content?.parts?.[0]?.text ||
+      "";
+
+    if (!res.ok) {
+      throw new Error(text || data?.error || JSON.stringify(data));
+    }
+
+    return text || JSON.stringify(data);
+  }
+
+  async function onAskClick() {
+    const input = document.getElementById("aiPrompt");
+    const output = document.getElementById("aiOutput");
+    const btn = document.getElementById("aiBtn");
+
+    const prompt = (input.value || "").trim();
+    if (!prompt) {
+      output.textContent = "请输入问题";
+      return;
+    }
+
+    btn.disabled = true;
+    output.textContent = "思考中…";
+
+    try {
+      const answer = await askAI(prompt);
+      output.textContent = answer;
+    } catch (e) {
+      output.textContent = "出错了： " + (e?.message || e);
+    } finally {
+      btn.disabled = false;
+    }
+  }
+</script>
+
+<div style="max-width:720px;margin:16px auto;padding:12px;border:1px solid #ddd;border-radius:12px;">
+  <div style="display:flex;gap:8px;">
+    <input id="aiPrompt" placeholder="输入你的问题…" style="flex:1;padding:10px;border:1px solid #ccc;border-radius:10px;" />
+    <button id="aiBtn" onclick="onAskClick()" style="padding:10px 14px;border-radius:10px;border:0;cursor:pointer;">
+      问 AI
+    </button>
+  </div>
+  <pre id="aiOutput" style="white-space:pre-wrap;margin-top:12px;min-height:80px;background:#f7f7f7;padding:12px;border-radius:12px;"></pre>
+</div>
     
     <style>
         body { margin: 0; overflow: hidden; background-color: #050510; color: #fff; font-family: 'Noto Sans SC', sans-serif; }
@@ -3452,3 +3513,4 @@
 </script>
 </body>
 </html>
+
