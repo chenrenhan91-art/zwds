@@ -13,34 +13,7 @@
     <script src="https://cdn.jsdelivr.net/npm/lunar-javascript@1.6.12/lunar.min.js"></script>
     <!-- Marked for Markdown Parsing -->
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-<script>
-async function aiText({
-  system = "",
-  user = "",
-  temperature = 0.7,
-  maxTokens = 2048,
-} = {}) {
-  const resp = await fetch("https://yuzai.chenrenhan91.workers.dev/ai", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      system,
-      user,
-      temperature,
-      maxTokens,
-    }),
-  });
-
-  if (!resp.ok) {
-    const text = await resp.text();
-    throw new Error("AI 请求失败：" + resp.status + " " + text);
-  }
-
-  const data = await resp.json();
-  return data.text || "";
-}
-</script>
-
+    
     <style>
         body { margin: 0; overflow: hidden; background-color: #050510; color: #fff; font-family: 'Noto Sans SC', sans-serif; }
         #canvas-container { width: 100vw; height: 100vh; position: absolute; top: 0; left: 0; z-index: 1; }
@@ -3479,7 +3452,3 @@ async function aiText({
 </script>
 </body>
 </html>
-
-
-
-
