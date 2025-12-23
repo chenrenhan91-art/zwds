@@ -13,39 +13,7 @@
     <script src="https://cdn.jsdelivr.net/npm/lunar-javascript@1.6.12/lunar.min.js"></script>
     <!-- Marked for Markdown Parsing -->
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-    <script>
-const AI_PROXY_URL = "https://yuzai.chenrenhan91.workers.dev/ai";
-
-async function aiText({
-  system = "",
-  user = "",
-  temperature = 0.7,
-  maxOutputTokens = 2048,
-  model = "qwen-plus-2025-07-28",
-  signal
-} = {}) {
-  const resp = await fetch(AI_PROXY_URL, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      system,
-      user,
-      temperature,
-      maxTokens: maxOutputTokens,
-      model
-    }),
-    signal
-  });
-
-  const data = await resp.json();
-  if (!resp.ok) {
-    throw new Error(data?.error || `HTTP ${resp.status}`);
-  }
-  return (data.text || "").trim();
-}
-
-</script>
-
+    
     <style>
         body { margin: 0; overflow: hidden; background-color: #050510; color: #fff; font-family: 'Noto Sans SC', sans-serif; }
         #canvas-container { width: 100vw; height: 100vh; position: absolute; top: 0; left: 0; z-index: 1; }
@@ -181,207 +149,6 @@ async function aiText({
             outline: none;
             background: rgba(15, 23, 42, 0.8);
             box-shadow: 0 0 10px rgba(56, 189, 248, 0.2);
-        }
-
-        /* --- New Uiverse Button Styles (Particle Flow) --- */
-        .uiverse {
-            --duration: 7s;
-            --easing: linear;
-            /* Adapted for Space Theme: Cyan, Blue, Purple */
-            --c-color-1: rgba(56, 189, 248, 0.7); 
-            --c-color-2: #4361ee;
-            --c-color-3: #c084fc;
-            --c-color-4: rgba(34, 211, 238, 0.7);
-            --c-shadow: rgba(56, 189, 248, 0.4);
-            --c-shadow-inset-top: rgba(56, 189, 248, 0.6);
-            --c-shadow-inset-bottom: rgba(67, 97, 238, 0.6);
-            --c-radial-inner: #1e293b;
-            --c-radial-outer: #0f172a;
-            --c-color: #fff;
-            
-            -webkit-tap-highlight-color: transparent;
-            -webkit-appearance: none;
-            outline: none;
-            position: relative;
-            cursor: pointer;
-            border: none;
-            display: table;
-            border-radius: 24px;
-            padding: 0;
-            margin-top: 25px;
-            width: 100%;
-            text-align: center;
-            font-weight: 600;
-            font-size: 16px;
-            letter-spacing: 0.02em;
-            line-height: 1.5;
-            color: var(--c-color);
-            background: radial-gradient(
-                circle,
-                var(--c-radial-inner),
-                var(--c-radial-outer) 80%
-            );
-            box-shadow: 0 0 14px var(--c-shadow);
-        }
-
-        .uiverse:before {
-            content: "";
-            pointer-events: none;
-            position: absolute;
-            z-index: 3;
-            left: 0;
-            top: 0;
-            right: 0;
-            bottom: 0;
-            border-radius: 24px;
-            box-shadow:
-                inset 0 3px 12px var(--c-shadow-inset-top),
-                inset 0 -3px 4px var(--c-shadow-inset-bottom);
-        }
-
-        .uiverse .wrapper {
-            -webkit-mask-image: -webkit-radial-gradient(white, black);
-            overflow: hidden;
-            border-radius: 24px;
-            min-width: 132px;
-            padding: 12px 0;
-            width: 100%;
-        }
-
-        .uiverse .wrapper span {
-            display: inline-block;
-            position: relative;
-            z-index: 1;
-        }
-
-        .uiverse:hover {
-            --duration: 1400ms;
-        }
-
-        .uiverse .wrapper .circle {
-            position: absolute;
-            left: 0;
-            top: 0;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            filter: blur(var(--blur, 8px));
-            background: var(--background, transparent);
-            transform: translate(var(--x, 0), var(--y, 0)) translateZ(0);
-            animation: var(--animation, none) var(--duration) var(--easing) infinite;
-        }
-
-        .uiverse .wrapper .circle.circle-1,
-        .uiverse .wrapper .circle.circle-9,
-        .uiverse .wrapper .circle.circle-10 {
-            --background: var(--c-color-4);
-        }
-
-        .uiverse .wrapper .circle.circle-3,
-        .uiverse .wrapper .circle.circle-4 {
-            --background: var(--c-color-2);
-            --blur: 14px;
-        }
-
-        .uiverse .wrapper .circle.circle-5,
-        .uiverse .wrapper .circle.circle-6 {
-            --background: var(--c-color-3);
-            --blur: 16px;
-        }
-
-        .uiverse .wrapper .circle.circle-2,
-        .uiverse .wrapper .circle.circle-7,
-        .uiverse .wrapper .circle.circle-8,
-        .uiverse .wrapper .circle.circle-11,
-        .uiverse .wrapper .circle.circle-12 {
-            --background: var(--c-color-1);
-            --blur: 12px;
-        }
-
-        .uiverse .wrapper .circle.circle-1 { --x: 0; --y: -40px; --animation: circle-1; }
-        .uiverse .wrapper .circle.circle-2 { --x: 92px; --y: 8px; --animation: circle-2; }
-        .uiverse .wrapper .circle.circle-3 { --x: -12px; --y: -12px; --animation: circle-3; }
-        .uiverse .wrapper .circle.circle-4 { --x: 80px; --y: -12px; --animation: circle-4; }
-        .uiverse .wrapper .circle.circle-5 { --x: 12px; --y: -4px; --animation: circle-5; }
-        .uiverse .wrapper .circle.circle-6 { --x: 56px; --y: 16px; --animation: circle-6; }
-        .uiverse .wrapper .circle.circle-7 { --x: 8px; --y: 28px; --animation: circle-7; }
-        .uiverse .wrapper .circle.circle-8 { --x: 28px; --y: -4px; --animation: circle-8; }
-        .uiverse .wrapper .circle.circle-9 { --x: 20px; --y: -12px; --animation: circle-9; }
-        .uiverse .wrapper .circle.circle-10 { --x: 64px; --y: 16px; --animation: circle-10; }
-        .uiverse .wrapper .circle.circle-11 { --x: 4px; --y: 4px; --animation: circle-11; }
-        .uiverse .wrapper .circle.circle-12 { --blur: 14px; --x: 52px; --y: 4px; --animation: circle-12; }
-
-        @keyframes circle-1 { 33% { transform: translate(0px, 16px) translateZ(0); } 66% { transform: translate(12px, 64px) translateZ(0); } }
-        @keyframes circle-2 { 33% { transform: translate(80px, -10px) translateZ(0); } 66% { transform: translate(72px, -48px) translateZ(0); } }
-        @keyframes circle-3 { 33% { transform: translate(20px, 12px) translateZ(0); } 66% { transform: translate(12px, 4px) translateZ(0); } }
-        @keyframes circle-4 { 33% { transform: translate(76px, -12px) translateZ(0); } 66% { transform: translate(112px, -8px) translateZ(0); } }
-        @keyframes circle-5 { 33% { transform: translate(84px, 28px) translateZ(0); } 66% { transform: translate(40px, -32px) translateZ(0); } }
-        @keyframes circle-6 { 33% { transform: translate(28px, -16px) translateZ(0); } 66% { transform: translate(76px, -56px) translateZ(0); } }
-        @keyframes circle-7 { 33% { transform: translate(8px, 28px) translateZ(0); } 66% { transform: translate(20px, -60px) translateZ(0); } }
-        @keyframes circle-8 { 33% { transform: translate(32px, -4px) translateZ(0); } 66% { transform: translate(56px, -20px) translateZ(0); } }
-        @keyframes circle-9 { 33% { transform: translate(20px, -12px) translateZ(0); } 66% { transform: translate(80px, -8px) translateZ(0); } }
-        @keyframes circle-10 { 33% { transform: translate(68px, 20px) translateZ(0); } 66% { transform: translate(100px, 28px) translateZ(0); } }
-        @keyframes circle-11 { 33% { transform: translate(4px, 4px) translateZ(0); } 66% { transform: translate(68px, 20px) translateZ(0); } }
-        @keyframes circle-12 { 33% { transform: translate(56px, 0px) translateZ(0); } 66% { transform: translate(60px, -32px) translateZ(0); } }
-
-        /* --- AI Text Button Style (satyamchaudharydev Modified) --- */
-        .ai-text-btn {
-            margin-top: 20px;
-            width: 100%;
-            height: auto;
-            background: transparent;
-            padding: 10px 0;
-            border: none;
-            cursor: pointer;
-            
-            --border-right: 4px;
-            --text-stroke-color: rgba(56, 189, 248, 0.5); /* Cyan dim */
-            --animation-color: #38bdf8; /* Cyan bright */
-            --fs-size: 1.1rem; /* Suitable size for sidebar */
-            
-            letter-spacing: 2px;
-            text-decoration: none;
-            font-size: var(--fs-size);
-            font-family: 'Noto Sans SC', sans-serif;
-            position: relative;
-            text-transform: uppercase;
-            color: transparent;
-            -webkit-text-stroke: 1px var(--text-stroke-color);
-            
-            /* Flex center for content */
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .ai-text-btn .actual-text {
-            position: relative;
-            color: transparent;
-            -webkit-text-stroke: 1px var(--text-stroke-color);
-        }
-
-        .ai-text-btn .hover-text {
-            position: absolute;
-            box-sizing: border-box;
-            content: attr(data-text);
-            color: var(--animation-color);
-            width: 0%;
-            inset: 0;
-            border-right: var(--border-right) solid var(--animation-color);
-            overflow: hidden;
-            transition: 0.5s;
-            -webkit-text-stroke: 1px var(--animation-color);
-            
-            /* Ensure absolute text is centered */
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin: auto;
-        }
-
-        .ai-text-btn:hover .hover-text {
-            width: 100%;
-            filter: drop-shadow(0 0 15px var(--animation-color));
         }
 
         button {
@@ -1146,25 +913,7 @@ async function aiText({
                 <option value="0">女 (坤造)</option>
             </select>
 
-            <!-- Modified Button Start -->
-            <button class="uiverse" onclick="generateChart()">
-                <div class="wrapper">
-                    <span>🚀 开启星盘</span>
-                    <div class="circle circle-12"></div>
-                    <div class="circle circle-11"></div>
-                    <div class="circle circle-10"></div>
-                    <div class="circle circle-9"></div>
-                    <div class="circle circle-8"></div>
-                    <div class="circle circle-7"></div>
-                    <div class="circle circle-6"></div>
-                    <div class="circle circle-5"></div>
-                    <div class="circle circle-4"></div>
-                    <div class="circle circle-3"></div>
-                    <div class="circle circle-2"></div>
-                    <div class="circle circle-1"></div>
-                </div>
-            </button>
-            <!-- Modified Button End -->
+            <button onclick="generateChart()">🚀 开启星盘</button>
             
             <div id="bureau-info" class="mt-6 text-xs text-blue-200 border-t border-blue-900 pt-3 hidden flex justify-between font-mono">
                 <!-- Bureau info -->
@@ -1190,12 +939,10 @@ async function aiText({
                 <!-- Stars -->
             </div>
             
-            <!-- Modified AI Button Start -->
-            <button class="ai-text-btn" data-text="✨ 问星 AI 深度解析" onclick="analyzeCurrentPalace(); event.stopPropagation();">
-                <span class="actual-text">&nbsp;✨ 问星 AI 深度解析&nbsp;</span>
-                <span aria-hidden="true" class="hover-text">&nbsp;✨ 问星 AI 深度解析&nbsp;</span>
+            <!-- Gemini Button -->
+            <button class="ai-btn" onclick="analyzeCurrentPalace(); event.stopPropagation();">
+                <span>✨</span> 问星 AI 深度解析
             </button>
-            <!-- Modified AI Button End -->
 
             <!-- Removed "点击悬浮星岛查看详情" text as requested -->
         </div>
@@ -1330,23 +1077,32 @@ async function aiText({
             payload.systemInstruction = { parts: [{ text: systemInstruction }] };
         }
 
-const maxRetries = 3;
-let delay = 1000;
+        const maxRetries = 3;
+        let delay = 1000;
 
-for (let i = 0; i < maxRetries; i++) {
-  try {
-    // ===== 原本成功时的返回 =====
-    return text || "星盘模糊，无法解读。";
+        for (let i = 0; i < maxRetries; i++) {
+            try {
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
 
-  } catch (error) {
-    if (i === maxRetries - 1) {
-      return `连接宇宙能量失败（API Error: ${error.message}），请稍后再试。`;
+                if (!response.ok) {
+                    const errData = await response.json().catch(() => ({}));
+                    console.error("Gemini API Error:", response.status, errData);
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                return data.candidates?.[0]?.content?.parts?.[0]?.text || "星象模糊，无法解读。";
+            } catch (error) {
+                if (i === maxRetries - 1) return `连接宇宙能量失败 (API Error: ${error.message})。请稍后再试。`;
+                await new Promise(r => setTimeout(r, delay));
+                delay *= 2;
+            }
+        }
     }
-
-    await new Promise(r => setTimeout(r, delay));
-    delay *= 2;
-  }
-}
 
     // --- 1. ZI WEI DOU SHU LOGIC ENGINE ---
 
@@ -2038,242 +1794,7 @@ for (let i = 0; i < maxRetries; i++) {
         `;
     }
 
-    // --- LIU YAO (I Ching) LOGIC ---
-    
-    let currentYaoLines = []; // Stores 6 lines data
-    let isTossing = false;
-
-    const HEX_64 = {
-        '111111': '乾为天', '000000': '坤为地', '100010': '水雷屯', '010001': '山水蒙',
-        '111010': '水天需', '010111': '天水讼', '010000': '地水师', '000010': '水地比',
-        '111011': '风天小畜', '110111': '天泽履', '111000': '地天泰', '000111': '天地否',
-        '101111': '天火同人', '111101': '火天大有', '001000': '地山谦', '000100': '雷地豫',
-        '100110': '泽雷随', '011001': '山风蛊', '110000': '地泽临', '000011': '风地观',
-        '100101': '火雷噬嗑', '101001': '山火贲', '000001': '山地剥', '100000': '地雷复',
-        '100111': '天雷无妄', '111001': '山天大畜', '100001': '山雷颐', '011110': '泽风大过',
-        '010010': '坎为水', '101101': '离为火', '001110': '泽山咸', '011100': '雷风恒',
-        '001111': '天山遁', '111100': '雷天大壮', '000101': '火地晋', '101000': '地火明夷',
-        '101010': '风火家人', '010101': '火泽睽', '001010': '水山蹇', '010100': '雷水解',
-        '110001': '山泽损', '100011': '风雷益', '111110': '泽天夬', '011111': '天风姤',
-        '000110': '泽地萃', '011000': '地风升', '010110': '泽水困', '011010': '水风井',
-        '101110': '泽火革', '011101': '火风鼎', '100100': '震为雷', '001001': '艮为山',
-        '001011': '风山渐', '110100': '雷泽归妹', '101100': '雷火丰', '001101': '火山旅',
-        '011011': '巽为风', '110110': '兑为泽', '010011': '风水涣', '110010': '水泽节',
-        '110011': '风泽中孚', '001100': '雷山小过', '101011': '水火既济', '110101': '火水未济'
-    };
-
-    function toggleLiuYaoPanel() {
-        const panel = document.getElementById('liuYaoPanel');
-        if (panel.style.display === 'flex') {
-            panel.style.display = 'none';
-        } else {
-            panel.style.display = 'flex';
-            document.getElementById('dailyPanel').style.display = 'none';
-            document.getElementById('lifePanel').style.display = 'none';
-            document.getElementById('chatWindow').style.display = 'none';
-            
-            // Reset state if starting fresh
-            if(currentYaoLines.length === 6) {
-               // keep existing result or add a reset button? let's keep it for now.
-            }
-        }
-    }
-
-    function tossCoins() {
-        if (isTossing || currentYaoLines.length >= 6) return;
-        isTossing = true;
-
-        // 1. Visual Shake Animation
-        const coins = document.querySelectorAll('.coin');
-        coins.forEach(c => c.classList.add('shaking'));
-
-        // 2. Logic: Probability Simulation (Report Logic)
-        // Word (Chinese) = Yin = 2
-        // Back (Manchu) = Yang = 3
-        // 3 Coins sum: 
-        // 6 (3 words) = Old Yin (X)
-        // 7 (1 back, 2 words) = Young Yang (-)
-        // 8 (2 backs, 1 word) = Young Yin (--)
-        // 9 (3 backs) = Old Yang (O)
-
-        setTimeout(() => {
-            coins.forEach(c => c.classList.remove('shaking'));
-            
-            // Randomize 3 coins
-            let sum = 0;
-            let visualStates = []; // true=Yang/Back, false=Yin/Word
-
-            for(let i=0; i<3; i++) {
-                // 50/50 for each coin physically
-                const isYang = Math.random() > 0.5;
-                visualStates.push(isYang);
-                sum += isYang ? 3 : 2;
-                
-                // Update Visuals
-                const coinEl = document.getElementById(`coin${i+1}`);
-                if (isYang) {
-                    coinEl.classList.remove('yin');
-                    coinEl.classList.add('yang');
-                    // coinEl.querySelector('.coin-top').innerText = ''; 
-                    // coinEl.querySelector('.coin-btm').innerText = '';
-                } else {
-                    coinEl.classList.remove('yang');
-                    coinEl.classList.add('yin');
-                    // coinEl.querySelector('.coin-top').innerText = '';
-                    // coinEl.querySelector('.coin-btm').innerText = '';
-                }
-            }
-
-            // Record Line
-            // 6: Old Yin (0 -> 1)
-            // 7: Young Yang (1)
-            // 8: Young Yin (0)
-            // 9: Old Yang (1 -> 0)
-            
-            let yao = { val: sum, isMoving: (sum===6 || sum===9), type: (sum%2!==0) ? 1 : 0 }; // 7,9=odd=Yang; 6,8=even=Yin
-            currentYaoLines.push(yao);
-            
-            // Update UI Counters
-            document.getElementById('yaoCount').innerText = currentYaoLines.length;
-            
-            renderHexagramLines();
-
-            if (currentYaoLines.length === 6) {
-                document.getElementById('tossBtn').style.display = 'none';
-                document.getElementById('interpretBtn').classList.remove('hidden');
-                document.getElementById('interpretBtn').classList.add('flex');
-            }
-
-            isTossing = false;
-        }, 600);
-    }
-
-    function resetHexagram() {
-        currentYaoLines = [];
-        document.getElementById('yaoCount').innerText = '0';
-        document.getElementById('hexDisplay').innerHTML = '<div class="text-center text-gray-600 mt-10">等待起卦...</div>';
-        document.getElementById('tossBtn').style.display = 'block';
-        document.getElementById('interpretBtn').classList.add('hidden');
-        document.getElementById('interpretBtn').classList.remove('flex');
-        
-        // Reset coins to initial state (optional, just for visual consistency)
-        const coins = document.querySelectorAll('.coin');
-        coins.forEach(c => {
-            c.classList.remove('yang');
-            // Assuming default state has neither or has specific default style
-            // The initial HTML doesn't have 'yin' or 'yang' classes, relying on base styles
-            // But our tossCoins adds them. Let's revert to 'yin' or just remove both.
-            // Let's remove 'yang' and ensure base state if needed, or default to yin
-            // Actually, initial state in HTML has no yin/yang class, so it falls back to base CSS.
-            // But base CSS uses .coin background which is copper.
-            // Let's just remove 'yang' and 'yin' to be safe.
-            c.classList.remove('yang');
-            c.classList.remove('yin');
-        });
-        
-        isTossing = false;
-    }
-
-    function renderHexagramLines() {
-        const container = document.getElementById('hexDisplay');
-        container.innerHTML = ''; // Rebuild
-        
-        // Render from array (0 is bottom, so we iterate normally but flex-direction is column-reverse)
-        currentYaoLines.forEach((yao, idx) => {
-            const row = document.createElement('div');
-            row.className = 'hex-row';
-            
-            const label = document.createElement('div');
-            label.className = 'hex-label';
-            label.innerText = (idx + 1); // 1-6
-            
-            const line = document.createElement('div');
-            line.className = 'hex-line ' + (yao.type === 1 ? 'yang' : 'yin');
-            
-            row.appendChild(label);
-            row.appendChild(line);
-            
-            if (yao.isMoving) {
-                const marker = document.createElement('div');
-                marker.className = 'move-marker ' + (yao.val === 9 ? 'move-o' : 'move-x');
-                marker.innerText = (yao.val === 9 ? 'O' : 'X');
-                row.appendChild(marker);
-            }
-            
-            container.appendChild(row);
-        });
-        
-        // If complete, show name
-        if (currentYaoLines.length === 6) {
-            const benGuaBinary = currentYaoLines.map(y => y.type).join(''); // e.g. 111111 (Top to Bottom? Dictionary expects Top? Usually bit 0 is bottom. Let's assume standard array 0=Bottom)
-            // Standard binary representation usually reads Bottom to Top for Hexagrams? 
-            // Usually 111111 -> Qian. If array[0] is bottom, then join('') makes "Bottom...Top". 
-            // Wait, binary usually reads MSB at left (Top) to LSB (Bottom)? 
-            // Let's reverse the array for string key if needed. 
-            // Traditional Hex key: Top line is first char? 
-            // Let's standard: Top line is first char in string "101010".
-            // My array is [Bottom, ..., Top]. So reverse it.
-            const binStr = [...currentYaoLines].reverse().map(y => y.type).join('');
-            
-            const name = HEX_64[binStr] || "未知卦";
-            
-            const infoDiv = document.createElement('div');
-            infoDiv.className = "text-center text-yellow-400 font-bold mt-2";
-            infoDiv.innerHTML = `<div>本卦: ${name}</div>`;
-            container.appendChild(infoDiv); // Appends at bottom of flex-col-reverse (so visually top)
-        }
-    }
-
-    async function interpretHexagram() {
-        // Prepare data for AI
-        const binStr = [...currentYaoLines].reverse().map(y => y.type).join('');
-        const benGuaName = HEX_64[binStr] || "未知卦";
-        
-        // Calculate Zhi Gua (Transformed Hexagram)
-        // 6(Old Yin)->1, 9(Old Yang)->0, 7->1, 8->0
-        const zhiLines = currentYaoLines.map(y => {
-            if (y.val === 6) return 1;
-            if (y.val === 9) return 0;
-            return y.type;
-        });
-        const zhiBinStr = [...zhiLines].reverse().join('');
-        const zhiGuaName = HEX_64[zhiBinStr] || "未知卦";
-        
-        const movingLinesDesc = currentYaoLines.map((y, i) => {
-            if (!y.isMoving) return null;
-            return `第${i+1}爻发动 (${y.val === 9 ? '老阳' : '老阴'})`;
-        }).filter(x => x).join(', ');
-
-        const modal = document.getElementById('ai-modal');
-        const contentDiv = document.getElementById('ai-result-text');
-        
-        modal.style.display = 'flex';
-        contentDiv.innerHTML = '<p class="animate-pulse">🐢 正在以此卦问询天机...</p>';
-        
-        const systemPrompt = `你是一位精通《增删卜易》与传统纳甲筮法的六爻命理大师。
-你的任务是根据用户摇出的金钱课卦象（本卦、动爻、变卦）进行专业解读。
-
-解读要求：
-1. 准确分析卦名、五行、世应关系。
-2. 重点分析动爻（老阴/老阳）的吉凶变化，动爻是事情成败的关键。
-3. 结合变卦判断事情的最终走向。
-4. 语气专业、神秘但客观，给出具体的行动建议。
-5. 输出格式使用 Markdown，关键吉凶结论请加粗。`;
-
-        const userPrompt = `
-            用户起卦结果如下：
-            【本卦】: ${benGuaName} (结构: ${binStr})
-            【动爻】: ${movingLinesDesc || "静卦无动爻"}
-            【变卦/之卦】: ${zhiGuaName}
-            
-            请开始解卦。
-        `;
-        
-        const result = await callGemini(userPrompt, systemPrompt);
-        contentDiv.innerHTML = marked.parse(result);
-    }
-
-    // ... existing rest of the code ...
+    // ... existing rest of the code (Liu Yao, Three.js, etc.) ...
     // --- 2. THREE.JS VISUALIZATION ---
 
     let scene, camera, renderer, controls, raycaster, mouse;
@@ -3333,7 +2854,16 @@ for (let i = 0; i < maxRetries; i++) {
         const contentDiv = document.getElementById('ai-result-text');
         
         modal.style.display = 'flex';
-        contentDiv.innerHTML = '<p class="animate-pulse">🌌 正在连接星辰数据库，请稍候...</p>';
+        // Updated Loader HTML here
+        contentDiv.innerHTML = `
+            <div class="flex flex-col items-center justify-center" style="min-height: 200px;">
+                <div class="spinner-dual">
+                    <div class="loader-dual l1"></div>
+                    <div class="loader-dual l2"></div>
+                </div>
+                <p class="animate-pulse text-blue-300 font-mono text-center">🌌 正在连接星辰数据库<br>AI 大师推演中...</p>
+            </div>
+        `;
         
         const palaceName = selectedPalaceData.name;
         const starsDesc = selectedPalaceData.stars.map(s => {
@@ -3475,6 +3005,3 @@ for (let i = 0; i < maxRetries; i++) {
 </script>
 </body>
 </html>
-
-
-
