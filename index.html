@@ -1334,21 +1334,31 @@ async function aiText({
         let delay = 1000;
 
         for (let i = 0; i < maxRetries; i++) {
-            try {
-                const response = await fetch(url, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
-                });
+try {
+  const systemText =
+    payload?.systemInstruction?.parts?.map(p => p.text).join("") ||
+    payload?.system ||
+    "";
 
-                if (!response.ok) {
-                    const errData = await response.json().catch(() => ({}));
-                    console.error("Gemini API Error:", response.status, errData);
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                
-                const data = await response.json();
-                return data.candidates?.[0]?.content?.parts?.[0]?.text || "星象模糊，无法解读。";
+  const userText =
+    payload?.contents?.[0]?.parts?.map(p => p.text).join("") ||
+    payload?.user ||
+    payload?.prompt ||
+    "";
+
+  const text = await aiText({
+    system: systemText,
+    user: userText,
+    temperature: payload?.generationConfig?.temperature ?? 0.7,
+    maxTokens: payload?.generationConfig?.maxOutputTokens ?? 2048,
+    model: "qwen-plus-2025-07-28",
+  });
+
+  return text || "星盘模糊，无法解读。";
+} catch (error) {
+  // 你原来的 catch 逻辑保持不动
+}
+
             } catch (error) {
                 if (i === maxRetries - 1) return `连接宇宙能量失败 (API Error: ${error.message})。请稍后再试。`;
                 await new Promise(r => setTimeout(r, delay));
@@ -3484,4 +3494,5 @@ async function aiText({
 </script>
 </body>
 </html>
+
 
