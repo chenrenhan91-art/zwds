@@ -13,22 +13,7 @@
     <script src="https://cdn.jsdelivr.net/npm/lunar-javascript@1.6.12/lunar.min.js"></script>
     <!-- Marked for Markdown Parsing -->
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-// ======== AI Client (via Cloudflare Worker -> Qwen) ========
-const AI_PROXY_URL = "https://yuzai.chenrenhan91.workers.dev/ai";
-
-async function aiText({ system = "", user = "", temperature = 0.7, maxTokens = 2048, model = "qwen-plus-2025-07-28" } = {}) {
-  const resp = await fetch(AI_PROXY_URL, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ system, user, temperature, maxTokens, model }),
-  });
-
-  const data = await resp.json().catch(() => ({}));
-  if (!resp.ok) throw new Error(`AI proxy error ${resp.status}: ${JSON.stringify(data)}`);
-
-  return (data.text || "").trim();
-}
-
+    
     <style>
         body { margin: 0; overflow: hidden; background-color: #050510; color: #fff; font-family: 'Noto Sans SC', sans-serif; }
         #canvas-container { width: 100vw; height: 100vh; position: absolute; top: 0; left: 0; z-index: 1; }
@@ -3467,4 +3452,3 @@ async function aiText({ system = "", user = "", temperature = 0.7, maxTokens = 2
 </script>
 </body>
 </html>
-
