@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>紫微斗数 - 星际舰队版 (AI 核心)</title>
+    <title>紫微斗数 - 命运的全息宇宙</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Three.js -->
@@ -175,7 +175,7 @@
             box-shadow: 0 0 10px rgba(56, 189, 248, 0.2);
         }
 
-        /* Buttons & Animations (Keep as is) */
+        /* Buttons & Animations */
         .uiverse {
             --duration: 7s; --easing: linear; --c-color-1: rgba(56, 189, 248, 0.7); --c-color-2: #4361ee; --c-color-3: #c084fc; --c-color-4: rgba(34, 211, 238, 0.7);
             --c-shadow: rgba(56, 189, 248, 0.4); --c-shadow-inset-top: rgba(56, 189, 248, 0.6); --c-shadow-inset-bottom: rgba(67, 97, 238, 0.6);
@@ -385,7 +385,6 @@
         .calendar-fab { background: linear-gradient(135deg, #ffd700, #ff8c00); box-shadow: 0 5px 25px rgba(255, 140, 0, 0.4); }
         .kline-fab { background: linear-gradient(135deg, #ef4444, #b91c1c); box-shadow: 0 5px 25px rgba(220, 38, 38, 0.4); }
         .liuyao-fab { background: linear-gradient(135deg, #14b8a6, #0d9488); box-shadow: 0 5px 25px rgba(20, 184, 166, 0.4); }
-        /* Removed setting-fab */
         .handle-bar { width: 40px; height: 5px; background: rgba(255,255,255,0.2); border-radius: 5px; margin: 10px auto 5px auto; display: none; }
 
         /* --- MOBILE RESPONSIVE TWEAKS --- */
@@ -451,7 +450,8 @@
                 padding-left: 10px;
                 padding-right: 10px;
                 padding-bottom: env(safe-area-inset-bottom);
-                z-index: 40; 
+                /* KEY FIX: Reduced z-index to sit BELOW open panels (z:35) on mobile */
+                z-index: 18; 
                 background: linear-gradient(to top, rgba(5,5,16,0.9), transparent); /* Gradual background */
             }
             .fab { width: 50px; height: 50px; font-size: 22px; margin: 0 5px; border-width: 1px; }
